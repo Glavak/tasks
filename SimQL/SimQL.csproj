@@ -51,11 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\data.cs" />
-    <Compile Include="..\..\..\isWorkTask1\SimQLProgram.cs">
-      <Link>SimQLProgram.cs</Link>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimQLProgram.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
