@@ -9,25 +9,25 @@ using NUnit.Framework;
 
 namespace EvalTask
 {
-	public class EvalProgram
-	{
-		static void Main(string[] args)
-		{
-			string input = Console.In.ReadLine();
-		    string json = Console.In.ReadToEnd();
+    public class EvalProgram
+    {
+        static void Main(string[] args)
+        {
+            string input = Console.In.ReadLine();
+            string json = Console.In.ReadToEnd();
             
-		    string output;
+            string output;
 
-		    try
-		    {
+            try
+            {
                 output = Process(input, JObject.Parse(json));
             }
-		    catch (Exception e)
-		    {
-		        output = Process(input);
-		    }
+            catch (Exception e)
+            {
+                output = Process(input);
+            }
 
-			Console.WriteLine(output);
+            Console.WriteLine(output);
         }
 
         public static string Process(string input, JObject constants)

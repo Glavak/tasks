@@ -8,16 +8,16 @@ using NUnit.Framework.Constraints;
 
 namespace JsonConversion
 {
-	class JsonProgram
-	{
-		static void Main()
-		{
-			string json = Console.In.ReadToEnd();
+    class JsonProgram
+    {
+        static void Main()
+        {
+            string json = Console.In.ReadToEnd();
             var v2 = JObject.Parse(json).ToObject<JsonV2Model>();
             
-		    Console.WriteLine(JsonConvert.SerializeObject(ConvertV2ToV3.ConvertToV3(v2)));
-		}
-	}
+            Console.WriteLine(JsonConvert.SerializeObject(ConvertV2ToV3.ConvertToV3(v2)));
+        }
+    }
 
     public static class ConvertV2ToV3
     {
