@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace EvalTask
 {
-	class EvalProgram
+	public class EvalProgram
 	{
 		static void Main(string[] args)
 		{
