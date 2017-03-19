@@ -61,7 +61,14 @@ namespace EvalTask
         public static double Evaluate(string expression)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("expression", typeof(string), expression);
+            try
+            {
+                table.Columns.Add("expression", typeof(string), expression);
+            }
+            catch (Exception e)
+            {
+                return Double.NaN;
+            }
             DataRow row = table.NewRow();
             table.Rows.Add(row);
             return double.Parse((string)row["expression"]);
@@ -95,7 +102,8 @@ namespace EvalTask
         }
         
         [TestCase("0/0", Result = "error")]
-        [TestCase("1/0", Result = "error")]
+        [TestCase("1.1/0", Result = "error")]
+        [TestCase("1.1/(1.2-0.6*2)", Result = "error")]
         public string DivisionByZero(string input)
         {
             return EvalProgram.Process(input);
