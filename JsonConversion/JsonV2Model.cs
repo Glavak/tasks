@@ -11,17 +11,19 @@ namespace JsonConversion
         public JsonV2Model()
         {
             Products = new Dictionary<int, ProductV2Model>();
+            Constants = new Dictionary<string, double>();
             version = "2";
         }
 
         public string version;
+        public Dictionary<string, double> Constants;
         public Dictionary<int, ProductV2Model> Products;
     }
 
     public class ProductV2Model
     {
         public string name;
-        public int price;
+        public string price;
         public int count;
     }
 }
