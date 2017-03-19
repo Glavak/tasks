@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
@@ -32,6 +33,7 @@ namespace EvalTask
         {
             foreach (var constant in constants)
             {
+                // TODO: order constants by lenth desc
                 input = input.Replace(constant.Key, constant.Value.ToString());
             }
 
@@ -40,7 +42,7 @@ namespace EvalTask
 
         public static string Process(string input, IDictionary<string, double> constants)
         {
-            foreach (var constant in constants)
+            foreach (var constant in constants.OrderByDescending(x=>x.Key.Length))
             {
                 input = input.Replace(constant.Key, constant.Value.ToString(CultureInfo.InvariantCulture));
             }
@@ -101,6 +103,7 @@ namespace EvalTask
 
         [TestCase("a+a", "{a:2}", Result = "4")]
         [TestCase("a*2.5-somethin", "{a:2, somethin:3.4}", Result = "1.6")]
+        [TestCase("(pk6rq0teL)/(-37.0159578216336)", "{\"pk6rq0teL\":2147483647.0}", Result = "-58015077.1012854")]
         public string Constants(string input, string json)
         {
             return EvalProgram.Process(input, JObject.Parse(json));
