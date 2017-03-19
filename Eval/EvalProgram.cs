@@ -71,6 +71,7 @@ namespace EvalTask
         {
             DataTable table = new DataTable();
             expression = expression.Replace(",", ".");
+            expression = expression.Replace("'", "");
             try
             {
                 table.Columns.Add("expression", typeof(string), expression);
@@ -111,11 +112,18 @@ namespace EvalTask
         {
             return EvalProgram.Process(input);
         }
-        
+
         [TestCase("0/0", Result = "error")]
         [TestCase("1.1/0", Result = "error")]
-        [TestCase("1.1/(1.2-0.6*2)", Result = "error")]
+        [TestCase("1.1/(1,2-0.6*2)", Result = "error")]
         public string DivisionByZero(string input)
+        {
+            return EvalProgram.Process(input);
+        }
+
+        [TestCase("10'000", Result = "10000")]
+        [TestCase("100'000 + 124'343", Result = "224343")]
+        public string WeirdSymbols(string input)
         {
             return EvalProgram.Process(input);
         }
