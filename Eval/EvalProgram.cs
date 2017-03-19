@@ -42,7 +42,14 @@ namespace EvalTask
         {
             try
             {
-                return Evaluate(input).ToString(CultureInfo.InvariantCulture);
+                var result = Evaluate(input);
+
+                if (result == double.PositiveInfinity ||
+                    result == double.NegativeInfinity ||
+                    double.IsNaN(result))
+                    return "error";
+
+                return result.ToString(CultureInfo.InvariantCulture);
             }
             catch (SyntaxErrorException e)
             {
@@ -83,6 +90,13 @@ namespace EvalTask
         [TestCase("12 12", Result = "error")]
         [TestCase("100 000 + 134 405", Result = "error")]
         public string SpacesInExpression(string input)
+        {
+            return EvalProgram.Process(input);
+        }
+        
+        [TestCase("0/0", Result = "error")]
+        [TestCase("1/0", Result = "error")]
+        public string DivisionByZero(string input)
         {
             return EvalProgram.Process(input);
         }
