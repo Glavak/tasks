@@ -45,10 +45,11 @@ namespace SimQLTask
            
 
 	        JObject o = data;
+	        JToken acme;
 
             try
 	        {
-                JToken acme = data.SelectToken("data." + query);
+                return data.SelectToken("data." + query).ToString();
             }
 	        catch (Exception e)
 	        {
@@ -56,7 +57,8 @@ namespace SimQLTask
 	        }
             
 
-            
+            //TO DO NEXT TASK
+
 	        if (query.Contains("min("))
 	        {
 	            
