@@ -11,45 +11,28 @@ namespace JsonConversion
     {
         public JsonV3Model()
         {
-            products = new List<ProductV3Model>();
+            products = new List<ProductV3Abstract>();
             version = "3";
         }
         public string version;
-        public List<ProductV3Model> products;
+        public List<ProductV3Abstract> products;
     }
 
-    public class ProductV3Model
+    public abstract class ProductV3Abstract
     {
         public int id;
         public string name;
 
-        //[JsonConverter(typeof(DecimalFormatConverter))]
-        public double price;
         public int count;
     }
 
-    /*public class DecimalFormatConverter : JsonConverter
+    public class ProductV3Successfull : ProductV3Abstract
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return (objectType == typeof(decimal));
-        }
+        public double price;
+    }
 
-        public override void WriteJson(JsonWriter writer, object value,
-                                       JsonSerializer serializer)
-        {
-            writer.WriteValue(((double)value).ToString("0.#"));
-        }
-
-        public override bool CanRead
-        {
-            get { return false; }
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType,
-                                     object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-    }*/
+    public class ProductV3Error : ProductV3Abstract
+    {
+        public string price => "error";
+    }
 }
