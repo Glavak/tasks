@@ -83,9 +83,13 @@ namespace EvalTask
                     args.Result = Math.Sqrt(double.Parse(args.Parameters[0].Evaluate().ToString()));
 
                 if (name == "min")
-                    args.Result = Math.Min(double.Parse(args.Parameters[0].Evaluate().ToString()), double.Parse(args.Parameters[1].Evaluate().ToString()));
+                    args.Result = Math.Min(
+                        double.Parse(args.Parameters[0].Evaluate().ToString()),
+                        double.Parse(args.Parameters[1].Evaluate().ToString()));
                 if (name == "max")
-                    args.Result = Math.Max(double.Parse(args.Parameters[0].Evaluate().ToString()), double.Parse(args.Parameters[1].Evaluate().ToString()));
+                    args.Result = Math.Max(
+                        double.Parse(args.Parameters[0].Evaluate().ToString()), 
+                        double.Parse(args.Parameters[1].Evaluate().ToString()));
             };
 
             try

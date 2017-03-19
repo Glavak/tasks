@@ -46,7 +46,8 @@ namespace JsonConversion
             };
         }
 
-        private static ProductV3Abstract ConvertIfPriceIsAFormula(KeyValuePair<int, ProductV2Model> model, Dictionary<string, double> constants)
+        private static ProductV3Abstract ConvertIfPriceIsAFormula(KeyValuePair<int, ProductV2Model> model,
+            Dictionary<string, double> constants)
         {
             var price = EvalTask.EvalProgram.Process(model.Value.price, constants);
             if(price != "error")
@@ -98,7 +99,9 @@ namespace JsonConversion
         [Test]
         public void TestFormulaInPrice()
         {
-            string v2String = "{\'version\':\'2\',\'constants\':{\'a\':3,\'b\':4,\'c\':4.5},\'products\':{\'1\':{\'name\':\'product-name\',\'price\':\'c+a+b\',\'count\':100}}}";
+            string v2String = "{\'version\':\'2\',\'constants\':{\'a\':3,\'b\':4,\'c\':4.5},\'products\':{\'1\':{\'name\':" +
+                              "\'product-name\'" +
+                              ",\'price\':\'c+a+b\',\'count\':100}}}";
             var v2Json = JObject.Parse(v2String).ToObject<JsonV2Model>();
             string v3String = "{\"version\":\"3\",\"products\":[{\"id\":1,\"name\":\"product-name\",\"price\":11.5,\"count\":100}]}";
             var result = JsonConvert.SerializeObject(ConvertV2ToV3.ConvertToV3(v2Json));
@@ -110,7 +113,8 @@ namespace JsonConversion
         public void TestFormulaInPriceAnotherCase()
         {
             string v2String = "{\"version\":\"2\"," +
-                "\"constants\":{\"p\":375570429.0,\"BDT5b\":1895861230.0,\"pk6rq0teL\":2147483647.0,\"d801p5J6\":1994942430.0,\"GuuguI\":0.0}," +
+                "\"constants\":{\"p\":375570429.0,\"BDT5b\":1895861230.0,\"pk6rq0teL\":2147483647.0,\"d801p5J6\":" +
+                              "1994942430.0,\"GuuguI\":0.0}," +
                 "\"products\":{\"0\":{\"name\":\"RQbl0WfVY\",\"price\":\"(-84.06633771214)*(p)\",\"count\":881891749}," +
                 "\"1\":{\"name\":\"kDaf0Z\",\"price\":\"(12.1639563293028)+(p)\",\"count\":2147483647}," +
                 "\"304322859\":{\"name\":\"KcOi9dvy\",\"price\":\"(pk6rq0teL)/(-37.0159578216336)\",\"count\":1}," +
