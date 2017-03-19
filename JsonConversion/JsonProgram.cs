@@ -46,8 +46,6 @@ namespace JsonConversion
                         "\"3\": {\"name\": \"Box\",\"price\": 12.1,\"count\": 50}}}";
 
             var s = JObject.Parse(v2).ToObject<JsonV2Model>();
-            //Console.Out.WriteLine("s = {0}", s);
-
         }
     }
 }
