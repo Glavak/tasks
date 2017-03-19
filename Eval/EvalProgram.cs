@@ -68,9 +68,16 @@ namespace EvalTask
         }
 
         [TestCase("a+a", "{a:2}", Result = "4")]
+        [TestCase("a*2.5-somethin", "{a:2, somethin:3.4}", Result = "1.6")]
         public string Constants(string input, string json)
         {
             return EvalProgram.Process(input, JObject.Parse(json));
+        }
+
+        [TestCase("12 12", Result = "1212")]
+        public string SpacesInExpression(string input)
+        {
+            return EvalProgram.Process(input);
         }
     }
 }

@@ -14,22 +14,6 @@ namespace JsonConversion
 
             Console.WriteLine(JsonConvert.SerializeObject(ConvertV2ToV3.ConvertToV3(v2)));
 		}
-
-	    public static string Convert(string input)
-	    {
-            JObject v2 = JObject.Parse(input);
-
-            List<V3Product> products = new List<V3Product>();
-
-            foreach (var token in v2["products"])
-            {
-                Product p = token.First.ToObject<Product>();
-                int id = System.Convert.ToInt32(token.Path.Split('.').Last());
-                products.Add(new V3Product(id, p));
-            }
-            
-            return "{ 'version':'3', 'products': '" + JsonConvert.SerializeObject(products) + "' }";
-        }
 	}
 
     public static class ConvertV2ToV3
@@ -62,8 +46,6 @@ namespace JsonConversion
                         "\"3\": {\"name\": \"Box\",\"price\": 12.1,\"count\": 50}}}";
 
             var s = JObject.Parse(v2).ToObject<JsonV2Model>();
-            //Console.Out.WriteLine("s = {0}", s);
-
         }
     }
 }
