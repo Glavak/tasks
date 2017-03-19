@@ -25,5 +25,6 @@ namespace JsonConversion
         public string name;
         public string price;
         public int count;
+        public int[] size;
     }
 }

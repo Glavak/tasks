@@ -50,19 +50,29 @@ namespace JsonConversion
         {
             var price = EvalTask.EvalProgram.Process(model.Value.price, constants);
             if(price != "error")
-                return new ProductV3Successfull()
-                {
-                    id = model.Key,
-                    count = model.Value.count,
-                    name = model.Value.name,
-                    price = double.Parse(price, CultureInfo.InvariantCulture)
-                };
+                if(model.Value.size != null)
+                    return new ProductV3Sized()
+                    {
+                        id = model.Key,
+                        count = model.Value.count,
+                        name = model.Value.name,
+                        dimensions = new Dimensions(model.Value.size),
+                        price = double.Parse(price, CultureInfo.InvariantCulture)
+                    };
+                else
+                    return new ProductV3Successfull()
+                    {
+                        id = model.Key,
+                        count = model.Value.count,
+                        name = model.Value.name,
+                        price = double.Parse(price, CultureInfo.InvariantCulture)
+                    };
             else
                 return new ProductV3Error()
                 {
                     id = model.Key,
                     count = model.Value.count,
-                    name = model.Value.name,
+                    name = model.Value.name
                 };
         }
     }
