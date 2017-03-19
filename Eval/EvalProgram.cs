@@ -13,8 +13,7 @@ namespace EvalTask
 		{
 			string input = Console.In.ReadLine();
 		    string json = Console.In.ReadToEnd();
-
-
+            
 		    string output;
 
 		    try
@@ -41,6 +40,8 @@ namespace EvalTask
 
         public static string Process(string input)
         {
+            input = input.Replace(" ", "");
+
             return Evaluate(input).ToString(CultureInfo.InvariantCulture);
         }
 
@@ -75,6 +76,7 @@ namespace EvalTask
         }
 
         [TestCase("12 12", Result = "1212")]
+        [TestCase("100 000 + 134 405", Result = "234405")]
         public string SpacesInExpression(string input)
         {
             return EvalProgram.Process(input);
