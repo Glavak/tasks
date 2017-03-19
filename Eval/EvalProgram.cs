@@ -40,9 +40,14 @@ namespace EvalTask
 
         public static string Process(string input)
         {
-            input = input.Replace(" ", "");
-
-            return Evaluate(input).ToString(CultureInfo.InvariantCulture);
+            try
+            {
+                return Evaluate(input).ToString(CultureInfo.InvariantCulture);
+            }
+            catch (SyntaxErrorException e)
+            {
+                return "error";
+            }
         }
 
 
@@ -75,8 +80,8 @@ namespace EvalTask
             return EvalProgram.Process(input, JObject.Parse(json));
         }
 
-        [TestCase("12 12", Result = "1212")]
-        [TestCase("100 000 + 134 405", Result = "234405")]
+        [TestCase("12 12", Result = "error")]
+        [TestCase("100 000 + 134 405", Result = "error")]
         public string SpacesInExpression(string input)
         {
             return EvalProgram.Process(input);
