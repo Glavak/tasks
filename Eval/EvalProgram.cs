@@ -72,7 +72,7 @@ namespace EvalTask
 
         public static double Evaluate(string expression)
         {
-            //expression = expression.Replace(",", ".");
+            expression = expression.Replace(",", ".");
             expression = expression.Replace("'", "");
 
             Expression e = new Expression("0.0+"+expression);
@@ -151,6 +151,7 @@ namespace EvalTask
         [TestCase("sqrt(4)", Result = "2")]
         [TestCase("max(1,4)", Result = "4")]
         [TestCase("min(1,4)", Result = "1")]
+        [TestCase("min(1,4-2*2)", Result = "0")]
         public string Funcs(string input)
         {
             return EvalProgram.Process(input);
