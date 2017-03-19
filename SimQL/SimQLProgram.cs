@@ -44,8 +44,6 @@ namespace SimQLTask
 
         public static string GetJSObject(JObject data, string query)
         {
-
-
             JObject o = data;
             JToken acme;
             List<JToken> tokensToAggregate = new List<JToken>();

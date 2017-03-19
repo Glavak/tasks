@@ -73,9 +73,12 @@ namespace EvalTask
         public static double Evaluate(string expression)
         {
             expression = expression.Replace(",", ".");
+            expression = expression.Replace(";", ",");
             expression = expression.Replace("'", "");
 
             Expression e = new Expression("0.0+"+expression);
+
+           
 
             e.EvaluateFunction += delegate (string name, FunctionArgs args)
             {
