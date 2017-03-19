@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 
 namespace EvalTask
 {
@@ -8,11 +11,37 @@ namespace EvalTask
 	{
 		static void Main(string[] args)
 		{
-			string input = Console.In.ReadToEnd();
-            
-			string output = Evaluate(input).ToString(CultureInfo.InvariantCulture);
+			string input = Console.In.ReadLine();
+		    string json = Console.In.ReadToEnd();
+
+
+		    string output;
+
+		    try
+		    {
+                output = Process(input, JObject.Parse(json));
+            }
+		    catch (Exception e)
+		    {
+		        output = Process(input);
+		    }
 
 			Console.WriteLine(output);
+        }
+
+        public static string Process(string input, JObject constants)
+        {
+            foreach (var constant in constants)
+            {
+                input = input.Replace(constant.Key.ToString(), constant.Value.ToString());
+            }
+
+            return Process(input);
+        }
+
+        public static string Process(string input)
+        {
+            return Evaluate(input).ToString(CultureInfo.InvariantCulture);
         }
 
 
@@ -23,6 +52,25 @@ namespace EvalTask
             DataRow row = table.NewRow();
             table.Rows.Add(row);
             return double.Parse((string)row["expression"]);
+        }
+    }
+
+    [TestFixture]
+    public class EvalProgram_Should
+    {
+        [TestCase("1+1", Result = "2")]
+        [TestCase("(2 + 2)*2", Result = "8")]
+        [TestCase("-2-2", Result = "-4")]
+        [TestCase("2.2*2", Result = "4.4")]
+        public string SimplMath(string input)
+        {
+            return EvalProgram.Process(input);
+        }
+
+        [TestCase("a+a", "{a:2}", Result = "4")]
+        public string Constants(string input, string json)
+        {
+            return EvalProgram.Process(input, JObject.Parse(json));
         }
     }
 }
