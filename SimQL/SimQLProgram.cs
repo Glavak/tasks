@@ -72,10 +72,14 @@ namespace SimQLTask
 	        [Test]
 	        public void math_funct()
 	        {
+                var input =
+                  "{\"data\":{\"a\":{\"x\":3.14,\"b\":[{\"c\":15},{\"c\":9}]},\"z\":[2.65,35]},\"queries\":[\"sum(a.b.c)\",\"min(z)\",\"max(a.x)\"]}";
+                var output = "sum(a.b.c) = 24\r\nmin(z) = 2.65\r\nmax(a.x) = 3.14";
+                var result = ExecuteQueries(input);
+                Assert.AreEqual(output, String.Join("\r\n", result));
 
 
-         
-	        }
+            }
 	    }
         
 	    public static string GetJSObject(JObject data, string query)
@@ -84,9 +88,73 @@ namespace SimQLTask
 
 	        JObject o = data;
 	        JToken acme;
+	        List<JToken> tokensToAggregate = new List<JToken>();
+            if (!query.Contains("min") && !query.Contains("max") && !query.Contains("sum"))
+                tokensToAggregate = data.SelectTokens("data." + query).ToList<JToken>();
+
+            JToken resultToken = null;
+
+	        var escapedQuery = getPath(query);
+            if (query.Contains("min("))
+            {
+                var selectedTokens = data.SelectTokens("data." + escapedQuery).ToList();
+                if (selectedTokens.Count == 0)
+                {
+
+                    escapedQuery = escapedQuery.Substring(0, escapedQuery.LastIndexOf("."));
+
+                    var neededElement = query.Substring(query.LastIndexOf("."), query.Length - query.LastIndexOf(".") - 1);
+                    selectedTokens = data.SelectTokens("data." + escapedQuery + "[*]" + neededElement).ToList();
+                    resultToken = selectedTokens.Min(s => s.Value<double>());
+                }
+                else if (selectedTokens.First().Type == JTokenType.Array)
+                    resultToken = selectedTokens.Select(s => s.Value<JArray>()).Children().Min(s => s.Value<double>());
+                else if (selectedTokens.First().Type == JTokenType.Float || selectedTokens.First().Type == JTokenType.Integer)
+                    resultToken = selectedTokens.Min(s => s.Value<double>());
+            }
+            else if (query.Contains("sum("))
+            {
+                var selectedTokens = data.SelectTokens("data." + escapedQuery).ToList();
+                if (selectedTokens.Count == 0)
+                {
+
+                    escapedQuery = escapedQuery.Substring(0,escapedQuery.LastIndexOf("."));
+
+                    var neededElement= query.Substring(query.LastIndexOf("."), query.Length- query.LastIndexOf(".")-1);
+                    selectedTokens = data.SelectTokens("data." + escapedQuery+"[*]"+ neededElement).ToList();
+                    resultToken = selectedTokens.Sum(s => s.Value<double>());
+                }
+                else if ( selectedTokens.First().Type == JTokenType.Array)
+                    resultToken = selectedTokens.Select(s => s.Value<JArray>()).Children().Sum(s => s.Value<double>());
+                else if (selectedTokens.First().Type == JTokenType.Float || selectedTokens.First().Type == JTokenType.Integer)
+                    resultToken = selectedTokens.Sum(s => s.Value<double>());
+
+            }
+            else if (query.Contains("max("))
+            {
+                var selectedTokens = data.SelectTokens("data." + escapedQuery).ToList();
+                if (selectedTokens.Count == 0)
+                {
+
+                    escapedQuery = escapedQuery.Substring(0, escapedQuery.LastIndexOf("."));
+
+                    var neededElement = query.Substring(query.LastIndexOf("."), query.Length - query.LastIndexOf(".") - 1);
+                    selectedTokens = data.SelectTokens("data." + escapedQuery + "[*]" + neededElement).ToList();
+                    resultToken = selectedTokens.Max(s => s.Value<double>());
+                }
+                else if (selectedTokens.First().Type == JTokenType.Array)
+                    resultToken = selectedTokens.Select(s => s.Value<JArray>()).Children().Max(s => s.Value<double>());
+                else if(selectedTokens.First().Type == JTokenType.Float || selectedTokens.First().Type == JTokenType.Integer)
+                    resultToken = selectedTokens.Max(s => s.Value<double>());
+
+            }
+
+            if (resultToken != null)
+                return resultToken.ToString();
+
 
             try
-	        {
+            {
                 return data.SelectToken("data." + query).ToString();
             }
 	        catch (Exception e)
@@ -95,26 +163,21 @@ namespace SimQLTask
 	        }
             
 
-            //TO DO NEXT2 TASK
-
-	        if (query.Contains("min("))
-	        {
-	            
-	        }
-	        else if(query.Contains("sum("))
-	        {
-	            
-	        }
-	        else if(query.Contains("max("))
-	        {
-	            
-	        }
-
-            return acme.ToString();
         }
+
+	    public static string getPath(string query)
+	    {
+            var resultStr = query.Replace("min(", string.Empty)
+                .Replace("sum(", string.Empty)
+	        .Replace("max(", string.Empty)
+	        .Replace(")", string.Empty);
+	        return resultStr;
+
+	    }
 
         
 
        
+
     }
 }
