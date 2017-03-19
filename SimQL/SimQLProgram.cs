@@ -64,7 +64,7 @@ namespace SimQLTask
             {
                 var input =
                     "{\"data\":{\"empty\":{},\"ab\":0,\"x1\":1,\"x2\":2,\"y1\":{\"y2\":{\"y3\":3}}},\"queries\":[\"empty\",\"xyz\",\"x1.x2\",\"y1.y2.z\",\"empty.foobar\"]}";
-                var output = "empty = \r\nxyz = \r\nx1.x2 = \r\ny1.y2.z = \r\nempty.foobar = ";
+                var output = "empty\r\nxyz\r\nx1.x2\r\ny1.y2.z\r\nempty.foobar";
                 var result = ExecuteQueries(input);
                 Assert.AreEqual(output, String.Join("\r\n", result));
             }
