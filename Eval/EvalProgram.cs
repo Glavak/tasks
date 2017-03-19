@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using NCalc;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
@@ -71,20 +72,19 @@ namespace EvalTask
 
         public static double Evaluate(string expression)
         {
-            DataTable table = new DataTable();
             expression = expression.Replace(",", ".");
             expression = expression.Replace("'", "");
+
+            Expression e = new Expression(expression);
+
             try
             {
-                table.Columns.Add("expression", typeof(string), expression);
+                return double.Parse(e.Evaluate().ToString());
             }
-            catch (Exception e)
+            catch (NCalc.EvaluationException exception)
             {
                 return Double.NaN;
             }
-            DataRow row = table.NewRow();
-            table.Rows.Add(row);
-            return double.Parse((string)row["expression"]);
         }
     }
 

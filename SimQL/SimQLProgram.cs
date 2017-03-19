@@ -10,54 +10,50 @@ using SimQLTask;
 
 namespace SimQLTask
 {
-	class SimQLProgram
-	{
-		static void Main(string[] args)
-		{
-		    
-		        string json = Console.In.ReadToEnd();
-		        foreach (var result in ExecuteQueries(json))
-		            Console.WriteLine(result);
-		  
-		}
+    class SimQLProgram
+    {
+        static void Main(string[] args)
+        {
+            string json = Console.In.ReadToEnd();
+            foreach (var result in ExecuteQueries(json))
+                Console.WriteLine(result);
+        }
 
         public static IEnumerable<string> ExecuteQueries(string json)
         {
-
-            List<string> result = new List<string>(); 
+            List<string> result = new List<string>();
 
             var jObject = JObject.Parse(json);
-			var data = (JObject)jObject["data"];
-			var queries = jObject["queries"].ToObject<string[]>();
-          
+            var data = (JObject) jObject["data"];
+            var queries = jObject["queries"].ToObject<string[]>();
+
             foreach (var iterator in queries)
             {
                 string JsonString = GetJSObject(jObject, iterator);
-                
-                if(!String.IsNullOrEmpty(JsonString) && !JsonString.Equals("{}"))
-                  
-                 result.Add((iterator + " = " + JsonString.Replace(",",".")));
+
+                if (!String.IsNullOrEmpty(JsonString) && !JsonString.Equals("{}"))
+
+                    result.Add((iterator + " = " + JsonString.Replace(",", ".")));
                 else
                 {
-                     result.Add(iterator);
+                    result.Add(iterator);
                 }
-              
-		    }
+            }
             return result;
-		}
+        }
 
-	    [TestFixture]
-	    public class SimQLProgram_Should
-	    {
-	        [Test]
-	        public void Pass_WhenNull()
-	        {
-	            var input =
+        [TestFixture]
+        public class SimQLProgram_Should
+        {
+            [Test]
+            public void Pass_WhenNull()
+            {
+                var input =
                     "{    \"data\": {        \"a\": {            \"x\":3.14,             \"b\": {\"c\":15},             \"c\": {\"c\":9}        },         \"z\":42    },    \"queries\": [        \"a.b.c\",        \"z\",        \"a.x\"    ]}";
                 var output = "a.b.c = 15\r\nz = 42\r\na.x = 3.14";
-	            var result = ExecuteQueries(input);
-                Assert.AreEqual(output,String.Join("\r\n",result));
-	        }
+                var result = ExecuteQueries(input);
+                Assert.AreEqual(output, String.Join("\r\n", result));
+            }
 
             [Test]
             public void Pass_EmptyJson()
@@ -69,52 +65,40 @@ namespace SimQLTask
                 Assert.AreEqual(output, String.Join("\r\n", result));
             }
 
-	        [Test]
-	        public void math_funct()
-	        {
+            [Test]
+            public void math_funct()
+            {
+            }
+        }
 
-
-         
-	        }
-	    }
-        
-	    public static string GetJSObject(JObject data, string query)
-	    {
-           
-
-	        JObject o = data;
-	        JToken acme;
+        public static string GetJSObject(JObject data, string query)
+        {
+            JObject o = data;
+            JToken acme;
 
             try
-	        {
+            {
                 return data.SelectToken("data." + query).ToString();
             }
-	        catch (Exception e)
-	        {
-	            return "";
-	        }
-            
+            catch (Exception e)
+            {
+                return "";
+            }
+
 
             //TO DO NEXT2 TASK
 
-	        if (query.Contains("min("))
-	        {
-	            
-	        }
-	        else if(query.Contains("sum("))
-	        {
-	            
-	        }
-	        else if(query.Contains("max("))
-	        {
-	            
-	        }
+            if (query.Contains("min("))
+            {
+            }
+            else if (query.Contains("sum("))
+            {
+            }
+            else if (query.Contains("max("))
+            {
+            }
 
             return acme.ToString();
         }
-
-        
-
-       
     }
 }
