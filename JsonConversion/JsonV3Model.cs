@@ -24,6 +24,7 @@ namespace JsonConversion
         public string name;
 
         public int count;
+        public Dimensions dimensions;
     }
 
     public class ProductV3Successfull : ProductV3Abstract
@@ -34,5 +35,19 @@ namespace JsonConversion
     public class ProductV3Error : ProductV3Abstract
     {
         public double price => 0;
+    }
+
+    public class Dimensions
+    {
+        public int l;
+        public int w;
+        public int h;
+
+        public Dimensions(int[] size)
+        {
+            this.l = size[2];
+            this.w = size[0];
+            this.h = size[1];
+        }
     }
 }

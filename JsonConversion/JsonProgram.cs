@@ -55,6 +55,7 @@ namespace JsonConversion
                     id = model.Key,
                     count = model.Value.count,
                     name = model.Value.name,
+                    dimensions = new Dimensions(model.Value.size),
                     price = double.Parse(price, CultureInfo.InvariantCulture)
                 };
             else
@@ -63,6 +64,7 @@ namespace JsonConversion
                     id = model.Key,
                     count = model.Value.count,
                     name = model.Value.name,
+                    dimensions = new Dimensions(model.Value.size)
                 };
         }
     }
