@@ -72,18 +72,29 @@ namespace EvalTask
 
         public static double Evaluate(string expression)
         {
-            expression = expression.Replace(",", ".");
+            //expression = expression.Replace(",", ".");
             expression = expression.Replace("'", "");
 
             Expression e = new Expression("0.0+"+expression);
+
+            e.EvaluateFunction += delegate (string name, FunctionArgs args)
+            {
+                if (name == "sqrt")
+                    args.Result = Math.Sqrt(double.Parse(args.Parameters[0].Evaluate().ToString()));
+
+                if (name == "min")
+                    args.Result = Math.Min(double.Parse(args.Parameters[0].Evaluate().ToString()), double.Parse(args.Parameters[1].Evaluate().ToString()));
+                if (name == "max")
+                    args.Result = Math.Max(double.Parse(args.Parameters[0].Evaluate().ToString()), double.Parse(args.Parameters[1].Evaluate().ToString()));
+            };
 
             try
             {
                 return double.Parse(e.Evaluate().ToString());
             }
-            catch (NCalc.EvaluationException exception)
+            catch (EvaluationException)
             {
-                return Double.NaN;
+                return double.NaN;
             }
         }
     }
@@ -127,6 +138,20 @@ namespace EvalTask
         [TestCase("10'000", Result = "10000")]
         [TestCase("100'000 + 124'343", Result = "224343")]
         public string WeirdSymbols(string input)
+        {
+            return EvalProgram.Process(input);
+        }
+
+        [TestCase("4143095607/2.0+1.0", Result = "2071547804.5")]
+        public string BigNums(string input)
+        {
+            return EvalProgram.Process(input);
+        }
+
+        [TestCase("sqrt(4)", Result = "2")]
+        [TestCase("max(1,4)", Result = "4")]
+        [TestCase("min(1,4)", Result = "1")]
+        public string Funcs(string input)
         {
             return EvalProgram.Process(input);
         }
