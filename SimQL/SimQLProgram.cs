@@ -24,7 +24,6 @@ namespace SimQLTask
         public static IEnumerable<string> ExecuteQueries(string json)
         {
 
-
             List<string> result = new List<string>(); 
 
             var jObject = JObject.Parse(json);
@@ -73,13 +72,10 @@ namespace SimQLTask
 	        [Test]
 	        public void math_funct()
 	        {
-                var input =
-                   "{    \"data\": {\"a\":{\"x\":3.14, \"b\":[{\"c\":15}, {\"c\":9}]}, \"z\":[2.65, 35]},    \"queries\": [        \"sum(a.b.c)\",        \"min(z)\",        \"max(a.x)\"    ]}";
-                var output = "sum(a.b.c) = 24\r\nmin(z) = 2.65\r\nmax(a.x) = 3.14";
-                var result = ExecuteQueries(input);
-                Assert.AreEqual(output, String.Join("\r\n", result));
 
-            }
+
+         
+	        }
 	    }
         
 	    public static string GetJSObject(JObject data, string query)
@@ -88,7 +84,7 @@ namespace SimQLTask
 
 	        JObject o = data;
 	        JToken acme;
-            
+
             try
 	        {
                 return data.SelectToken("data." + query).ToString();
@@ -97,28 +93,27 @@ namespace SimQLTask
 	        {
 	            return "";
 	        }
-
+            
 
             //TO DO NEXT2 TASK
 
-            
+	        if (query.Contains("min("))
+	        {
+	            
+	        }
+	        else if(query.Contains("sum("))
+	        {
+	            
+	        }
+	        else if(query.Contains("max("))
+	        {
+	            
+	        }
 
-               
-
+            return acme.ToString();
         }
 
-	    public static string replaceMathFunc(string query)
-	    {
-            query.Replace("min(", string.Empty);
-            query.Replace(")", string.Empty);
-            query.Replace("sum(", string.Empty);
-            query.Replace(")", string.Empty);
-            query.Replace("max(", string.Empty);
-            query.Replace(")", string.Empty);
-
-	        return query;
-
-	    }
+        
 
        
     }
