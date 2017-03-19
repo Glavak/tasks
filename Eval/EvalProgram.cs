@@ -75,7 +75,7 @@ namespace EvalTask
             expression = expression.Replace(",", ".");
             expression = expression.Replace("'", "");
 
-            Expression e = new Expression(expression);
+            Expression e = new Expression("0.0+"+expression);
 
             try
             {
