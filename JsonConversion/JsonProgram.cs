@@ -35,9 +35,9 @@ namespace JsonConversion
             return v3Model;
         }
 
-        private static ProductV3Model ConvertIfPriceIsANumber(KeyValuePair<int, ProductV2Model> model)
+        private static ProductV3Abstract ConvertIfPriceIsANumber(KeyValuePair<int, ProductV2Model> model)
         {
-            return new ProductV3Model()
+            return new ProductV3Successfull()
             {
                 id = model.Key,
                 count = model.Value.count,
@@ -46,20 +46,28 @@ namespace JsonConversion
             };
         }
 
-        private static ProductV3Model ConvertIfPriceIsAFormula(KeyValuePair<int, ProductV2Model> model, Dictionary<string, double> constants)
+        private static ProductV3Abstract ConvertIfPriceIsAFormula(KeyValuePair<int, ProductV2Model> model, Dictionary<string, double> constants)
         {
             foreach (var constant in constants)
                 if (model.Value.price.Contains(constant.Key))
                     model.Value.price = model.Value.price.Replace(constant.Key, constant.Value.ToString());
 
             var price = EvalTask.EvalProgram.Process(model.Value.price);
-            return new ProductV3Model()
-            {
-                id = model.Key,
-                count = model.Value.count,
-                name = model.Value.name,
-                price = double.Parse(price, CultureInfo.InvariantCulture)
-            };
+            if(price != "error")
+                return new ProductV3Successfull()
+                {
+                    id = model.Key,
+                    count = model.Value.count,
+                    name = model.Value.name,
+                    price = double.Parse(price, CultureInfo.InvariantCulture)
+                };
+            else
+                return new ProductV3Error()
+                {
+                    id = model.Key,
+                    count = model.Value.count,
+                    name = model.Value.name,
+                };
         }
     }
 
@@ -88,6 +96,16 @@ namespace JsonConversion
             var result = JsonConvert.SerializeObject(ConvertV2ToV3.ConvertToV3(v2Json));
 
             Assert.AreEqual(v3String, result);
+        }
+
+        [Test]
+        public void DoSomething_WhenSomething()
+        {
+            string v2String = "{\"version\":\"2\",\"constants\":{\"p\":375570429.0,\"BDT5b\":1895861230.0,\"pk6rq0teL\":2147483647.0,\"d801p5J6\":1994942430.0,\"GuuguI\":0.0},\"products\":{\"0\":{\"name\":\"RQbl0WfVY\",\"price\":\"(-84.06633771214)*(p)\",\"count\":881891749},\"1\":{\"name\":\"kDaf0Z\",\"price\":\"(12.1639563293028)+(p)\",\"count\":2147483647},\"304322859\":{\"name\":\"KcOi9dvy\",\"price\":\"(pk6rq0teL)/(-37.0159578216336)\",\"count\":1},\"1408114756\":{\"name\":\"v4N\",\"price\":\"(-85.7739047081088)/(37.9361148634628)\",\"count\":1},\"1889271802\":{\"name\":\"wtXpL\",\"price\":\"(13.8310322136763)*(58.0251485845191)\",\"count\":0},\"687275581\":{\"name\":\"bp\",\"price\":\"(-92.3887056263111)-(d801p5J6)\",\"count\":0},\"1732466776\":{\"name\":\"IohrwvzQ\",\"price\":\"(d801p5J6)+(41.3040054688715)\",\"count\":2147483647},\"2147483647\":{\"name\":\"Abap\",\"price\":\"(-59.916888624391)-(-66.5829328664499)\",\"count\":2147483647},\"517841970\":{\"name\":\"KD9S4\",\"price\":\"(58.4912672445603)/(p)\",\"count\":2147483647},\"1362982700\":{\"name\":\"9pH\",\"price\":\"(-54.4264007147524)/(-45.6487527795363)\",\"count\":1}}}";
+            var v2Test = JObject.Parse(v2String).ToObject<JsonV2Model>();
+            var result = JsonConvert.SerializeObject(ConvertV2ToV3.ConvertToV3(v2Test));
+
+
         }
     }
 }
