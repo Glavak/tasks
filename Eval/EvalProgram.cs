@@ -32,7 +32,17 @@ namespace EvalTask
         {
             foreach (var constant in constants)
             {
-                input = input.Replace(constant.Key.ToString(), constant.Value.ToString());
+                input = input.Replace(constant.Key, constant.Value.ToString());
+            }
+
+            return Process(input);
+        }
+
+        public static string Process(string input, IDictionary<string, double> constants)
+        {
+            foreach (var constant in constants)
+            {
+                input = input.Replace(constant.Key, constant.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             return Process(input);
@@ -56,7 +66,6 @@ namespace EvalTask
                 return "error";
             }
         }
-
 
         public static double Evaluate(string expression)
         {
