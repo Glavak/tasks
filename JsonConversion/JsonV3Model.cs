@@ -33,6 +33,6 @@ namespace JsonConversion
 
     public class ProductV3Error : ProductV3Abstract
     {
-        public string price => "error";
+        public double price => 0;
     }
 }
