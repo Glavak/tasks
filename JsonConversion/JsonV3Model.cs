@@ -29,6 +29,7 @@ namespace JsonConversion
     public class ProductV3Successfull : ProductV3Abstract
     {
         public double price;
+        //asd
     }
 
     public class ProductV3Sized : ProductV3Successfull
