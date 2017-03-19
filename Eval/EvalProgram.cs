@@ -56,8 +56,8 @@ namespace EvalTask
             {
                 var result = Evaluate(input);
 
-                if (result == double.PositiveInfinity ||
-                    result == double.NegativeInfinity ||
+                if (double.IsPositiveInfinity(result) ||
+                    double.IsNegativeInfinity(result) ||
                     double.IsNaN(result))
                     return "error";
 

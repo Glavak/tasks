@@ -48,11 +48,7 @@ namespace JsonConversion
 
         private static ProductV3Abstract ConvertIfPriceIsAFormula(KeyValuePair<int, ProductV2Model> model, Dictionary<string, double> constants)
         {
-            foreach (var constant in constants)
-                if (model.Value.price.Contains(constant.Key))
-                    model.Value.price = model.Value.price.Replace(constant.Key, constant.Value.ToString());
-
-            var price = EvalTask.EvalProgram.Process(model.Value.price);
+            var price = EvalTask.EvalProgram.Process(model.Value.price, constants);
             if(price != "error")
                 return new ProductV3Successfull()
                 {
