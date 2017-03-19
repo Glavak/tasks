@@ -49,6 +49,7 @@ namespace EvalTask
         public static double Evaluate(string expression)
         {
             DataTable table = new DataTable();
+            expression = expression.Replace(",", ".");
             table.Columns.Add("expression", typeof(string), expression);
             DataRow row = table.NewRow();
             table.Rows.Add(row);
@@ -63,6 +64,7 @@ namespace EvalTask
         [TestCase("(2 + 2)*2", Result = "8")]
         [TestCase("-2-2", Result = "-4")]
         [TestCase("2.2*2", Result = "4.4")]
+        [TestCase("2,2*2", Result = "4.4")]
         public string SimplMath(string input)
         {
             return EvalProgram.Process(input);

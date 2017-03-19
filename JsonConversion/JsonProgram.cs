@@ -82,9 +82,9 @@ namespace JsonConversion
         [Test]
         public void TestFormulaInPrice()
         {
-            string v2String = "{\'version\':\'2\',\'constants\':{\'a\':3,\'b\':4},\'products\':{\'1\':{\'name\':\'product-name\',\'price\':\'3+a+b\',\'count\':100}}}";
+            string v2String = "{\'version\':\'2\',\'constants\':{\'a\':3,\'b\':4,\'c\':4.5},\'products\':{\'1\':{\'name\':\'product-name\',\'price\':\'c+a+b\',\'count\':100}}}";
             var v2Json = JObject.Parse(v2String).ToObject<JsonV2Model>();
-            string v3String = "{\"version\":\"3\",\"products\":[{\"id\":1,\"name\":\"product-name\",\"price\":10,\"count\":100}]}";
+            string v3String = "{\"version\":\"3\",\"products\":[{\"id\":1,\"name\":\"product-name\",\"price\":11.5,\"count\":100}]}";
             var result = JsonConvert.SerializeObject(ConvertV2ToV3.ConvertToV3(v2Json));
 
             Assert.AreEqual(v3String, result);
