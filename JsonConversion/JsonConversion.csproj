@@ -53,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonProgram.cs" />
+    <Compile Include="JsonV2Model.cs" />
+    <Compile Include="JsonV3Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
