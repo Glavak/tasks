@@ -51,8 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SimQLProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimQLProgram.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

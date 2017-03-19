@@ -32,7 +32,17 @@ namespace EvalTask
         {
             foreach (var constant in constants)
             {
-                input = input.Replace(constant.Key.ToString(), constant.Value.ToString());
+                input = input.Replace(constant.Key, constant.Value.ToString());
+            }
+
+            return Process(input);
+        }
+
+        public static string Process(string input, IDictionary<string, double> constants)
+        {
+            foreach (var constant in constants)
+            {
+                input = input.Replace(constant.Key, constant.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             return Process(input);
@@ -40,17 +50,35 @@ namespace EvalTask
 
         public static string Process(string input)
         {
-            input = input.Replace(" ", "");
+            try
+            {
+                var result = Evaluate(input);
 
-            return Evaluate(input).ToString(CultureInfo.InvariantCulture);
+                if (result == double.PositiveInfinity ||
+                    result == double.NegativeInfinity ||
+                    double.IsNaN(result))
+                    return "error";
+
+                return result.ToString(CultureInfo.InvariantCulture);
+            }
+            catch (SyntaxErrorException e)
+            {
+                return "error";
+            }
         }
-
 
         public static double Evaluate(string expression)
         {
             DataTable table = new DataTable();
             expression = expression.Replace(",", ".");
-            table.Columns.Add("expression", typeof(string), expression);
+            try
+            {
+                table.Columns.Add("expression", typeof(string), expression);
+            }
+            catch (Exception e)
+            {
+                return Double.NaN;
+            }
             DataRow row = table.NewRow();
             table.Rows.Add(row);
             return double.Parse((string)row["expression"]);
@@ -77,9 +105,17 @@ namespace EvalTask
             return EvalProgram.Process(input, JObject.Parse(json));
         }
 
-        [TestCase("12 12", Result = "1212")]
-        [TestCase("100 000 + 134 405", Result = "234405")]
+        [TestCase("12 12", Result = "error")]
+        [TestCase("100 000 + 134 405", Result = "error")]
         public string SpacesInExpression(string input)
+        {
+            return EvalProgram.Process(input);
+        }
+        
+        [TestCase("0/0", Result = "error")]
+        [TestCase("1.1/0", Result = "error")]
+        [TestCase("1.1/(1.2-0.6*2)", Result = "error")]
+        public string DivisionByZero(string input)
         {
             return EvalProgram.Process(input);
         }
