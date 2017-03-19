@@ -32,7 +32,7 @@ namespace SimQLTask
             foreach (var iterator in queries)
             {
                 string JsonString = GetJSObject(jObject, iterator);
-                if(!String.IsNullOrEmpty(JsonString)) 
+                if(!String.IsNullOrEmpty(JsonString))
                  result.Add((iterator + " = " + GetJSObject(jObject,iterator).Replace(",",".")));
               
 		    }
@@ -42,11 +42,38 @@ namespace SimQLTask
         
 	    public static string GetJSObject(JObject data, string query)
 	    {
+           
+
 	        JObject o = data;
-            JToken acme = data.SelectToken("data." + query);
+
+            try
+	        {
+                JToken acme = data.SelectToken("data." + query);
+            }
+	        catch (Exception e)
+	        {
+	            return "";
+	        }
+            
+
+            
+	        if (query.Contains("min("))
+	        {
+	            
+	        }
+	        else if(query.Contains("sum("))
+	        {
+	            
+	        }
+	        else if(query.Contains("max("))
+	        {
+	            
+	        }
 
             return acme.ToString();
         }
+
+        
 
        
     }
