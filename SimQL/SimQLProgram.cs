@@ -13,11 +13,12 @@ namespace SimQLTask
 	{
 		static void Main(string[] args)
 		{
-		    string json = Console.In.ReadToEnd();
-            foreach (var result in ExecuteQueries(json))
-                Console.WriteLine(result);
-
-        }
+		    
+		        string json = Console.In.ReadToEnd();
+		        foreach (var result in ExecuteQueries(json))
+		            Console.WriteLine(result);
+		  
+		}
 
         public static IEnumerable<string> ExecuteQueries(string json)
         {
@@ -29,7 +30,9 @@ namespace SimQLTask
 			var queries = jObject["queries"].ToObject<string[]>();
           
             foreach (var iterator in queries)
-		    {
+            {
+                string JsonString = GetJSObject(jObject, iterator);
+                if(!String.IsNullOrEmpty(JsonString)) 
                  result.Add((iterator + " = " + GetJSObject(jObject,iterator).Replace(",",".")));
               
 		    }
@@ -41,7 +44,10 @@ namespace SimQLTask
 	    {
 	        JObject o = data;
             JToken acme = data.SelectToken("data." + query);
+
             return acme.ToString();
         }
+
+       
     }
 }
